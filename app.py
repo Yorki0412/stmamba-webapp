@@ -70,16 +70,16 @@ def login_page():
     col1, col2, col3 = st.columns([1, 1.2, 1])
     
     with col2:
-        st.markdown("<h1 style='text-align: center; color: #1565c0;'>⚕️ STMamba 临床诊断中心</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: #1565c0;'>⚕️ STMamba 云诊断中心</h1>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #666;'>跨模态时空解耦乳腺造影辅助系统</p>", unsafe_allow_html=True)
         st.write("")
         
         # 使用表单包起来，支持回车登录
         with st.form("login_form"):
-            st.subheader("医生身份核验")
+            st.subheader("用户登录")
             
             # 身份证号输入限制为最大 18 位
-            id_card = st.text_input("👤 医师身份证号", max_chars=18, placeholder="请输入 18 位身份证号")
+            id_card = st.text_input("👤 用户账号 (身份证号)", max_chars=18, placeholder="请输入 18 位身份证号")
             password = st.text_input("🔒 登录密码", type="password", placeholder="请输入密码")
             
             submit_button = st.form_submit_button("安全登录", use_container_width=True)
@@ -87,24 +87,24 @@ def login_page():
             if submit_button:
                 # 这里做了一个极简的账号密码验证 (测试账号)
                 if len(id_card) != 18:
-                    st.error("身份证号格式不正确，需为 18 位。")
-                elif id_card == "320102199001011234" and password == "123456": # 你可以修改这里的测试账号
+                    st.error("账号格式不正确，需为 18 位身份证号。")
+                elif id_card == "320102199001011234" and password == "123456": # 测试账号
                     st.session_state.logged_in = True
                     st.session_state.current_user = id_card
                     st.success("验证成功！正在进入系统...")
                     time.sleep(0.5)
                     st.rerun() # 刷新页面，跳转到主界面
                 else:
-                    st.error("身份证号或密码错误，请重试。（测试账号: 320102199001011234 / 密码: 123456）")
+                    st.error("账号或密码错误，请重试。（测试账号: 320102199001011234 / 密码: 123456）")
 
 # ==========================================
 # 5. 主工作台页面模块
 # ==========================================
 def main_dashboard():
-    # 侧边栏：医生信息与导航
+    # 侧边栏：用户信息与导航
     with st.sidebar:
-        st.image("https://cdn-icons-png.flaticon.com/512/387/387561.png", width=100) # 医生头像占位图
-        st.markdown(f"**值班医师**：<br>ID: `{st.session_state.current_user[:6]}****{st.session_state.current_user[-4:]}`", unsafe_allow_html=True)
+        st.image("https://cdn-icons-png.flaticon.com/512/1077/1077114.png", width=100) # 更换为通用用户头像占位图
+        st.markdown(f"**当前用户**：<br>ID: `{st.session_state.current_user[:6]}****{st.session_state.current_user[-4:]}`", unsafe_allow_html=True)
         st.divider()
         st.markdown("🛠️ **系统设置**")
         st.checkbox("开启结构感知 (Spatial)")
@@ -122,7 +122,7 @@ def main_dashboard():
     tab_diagnose, tab_history = st.tabs(["🩺 多模态诊断", "📂 历史档案"])
     
     with tab_diagnose:
-        st.info("💡 操作指引：请在下方分别拖入患者的灰阶超声图像（定解剖）与超声造影视频（定血流）。")
+        st.info("💡 操作指引：请在下方分别拖入待测的灰阶超声图像（定解剖）与超声造影视频（定血流）。")
         
         # 用卡片式布局包裹上传区
         with st.container(border=True):
@@ -150,16 +150,15 @@ def main_dashboard():
                 
                 # --- 这里放之前的 Mock 推理与报告展示代码 ---
                 st.success("良恶性概率：恶性 86% | 良性 14%")
-                # ... (此处可以衔接你之前热力图、曲线图的代码)
                 
     with tab_history:
-        st.write("📅 历史诊断记录（演示数据）")
+        st.write("📅 历史检测记录（演示数据）")
         st.dataframe(
             pd.DataFrame({
-                "诊断时间": ["2026-04-19 10:30", "2026-04-18 14:15"],
-                "患者编号": ["P001", "P002"],
+                "检测时间": ["2026-04-19 10:30", "2026-04-18 14:15"],
+                "样本编号": ["S-001", "S-002"],
                 "AI 预测结果": ["高危 (86%)", "低危 (12%)"],
-                "确诊结果": ["等待活检", "良性纤维瘤"]
+                "实际标签": ["等待确认", "良性"]
             }), 
             use_container_width=True
         )
