@@ -7,7 +7,7 @@ import cv2
 import os
 import io
 from datetime import datetime
-from inference_engine import STMambaPredictor # 引入推理引擎
+from inference import STMambaPredictor # 引入推理引擎
 
 # ==========================================
 # 1. 核心工具函数：视频采样与报告生成
